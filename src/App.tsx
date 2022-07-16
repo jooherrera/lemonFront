@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+const API = import.meta.env.VITE_APP_API
 
 interface Actividad {
   cuit: number
@@ -26,7 +27,7 @@ const useApp = () => {
       setIsLoading(true)
 
       try {
-        const resp = await fetch('http://localhost:8080/api/v1/actividades', { signal: controller.signal })
+        const resp = await fetch(API, { signal: controller.signal })
         const json = await resp.json()
         setData(json)
       } catch (error: any) {
