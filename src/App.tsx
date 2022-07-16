@@ -18,32 +18,29 @@ const useApp = () => {
   const [data, setData] = useState<Actividad[]>([])
   const [error, setError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
   useEffect(() => {
     const controller = new AbortController()
 
     const callAPI = async () => {
-      setError(false)
       setIsLoading(true)
-
+      setError(false)
       try {
         const resp = await fetch(API, { signal: controller.signal })
         const json = await resp.json()
         setData(json)
+        setIsLoading(false)
       } catch (error: any) {
         if (controller.signal.aborted) {
           setError(false)
         } else {
           setError(true)
+          setIsLoading(false)
         }
-      } finally {
-        setIsLoading(false)
       }
     }
 
     callAPI()
     return () => {
-      setError(false)
       controller.abort()
     }
   }, [])
@@ -77,7 +74,7 @@ function App() {
                   <td>{el.cuitRepresentado}</td>
                   <td>{el.domicilio}</td>
                   <td>
-                    {el.tipoTelefono} - {el.telefono}
+                    {el.tipoTelefono ? el.tipoTelefono : '-'} - {el.telefono ? el.telefono : '-'}
                   </td>
                   <td>
                     {el.codigoActividad} - {el.descripcionActividad}
